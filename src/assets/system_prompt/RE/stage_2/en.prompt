@@ -1,0 +1,1 @@
+According to the given sentence, the two entities are of type ("$stl", "$otl") and the relation between them is "relation", find the two entities and list them all by group if there are multiple groups.\nIf not present, answer: none.\nRespond in the form of a table with two columns and a header of ("$stl", "$otl"):

@@ -1,0 +1,1 @@
+The given sentence is "$sentence"\n\nGiven a list of event types: "$etl"\n\nWhat event types in the given list might be included in this given sentence?\nIf not present, answer: none.\nRespond as a tuple, e.g. (event type 1, event type 2, ......):
