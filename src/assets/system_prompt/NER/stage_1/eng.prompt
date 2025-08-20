@@ -1,0 +1,1 @@
+The given sentence is "$sentence"\n\nGiven a list of entity types: "$etl"\n\nWhat entity types may be included in this sentence?\nIf not present, answer: none.\nRespond as a list, e.g. [entity type 1, entity type 2, ......]:

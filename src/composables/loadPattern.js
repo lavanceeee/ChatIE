@@ -75,7 +75,31 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
           prompt = orginal_prompt.replace("$relation", result_of_stage1);
           break;
       }
+
+    case "EE":
+      switch (stage) {
+        case "stage_1":
+          orginal_prompt = orginal_prompt.replace("$sentence", sentence);
+          prompt = orginal_prompt.replace("$etl", pattern["etl"]);
+          break;
+
+        case "stage_2":
+          prompt = orginal_prompt.replace("$etl", pattern["etl"]);
+          break;
+      }
+
+    case "NER":
+      switch (stage) {
+        case "stage_1":
+          orginal_prompt = orginal_prompt.replace("$sentence", sentence);
+          prompt = orginal_prompt.replace("$etl", pattern["etl"]);
+          break;
+
+        case "stage_2":
+          prompt = orginal_prompt.replace("$etl", pattern["etl"]);
+          break;
+      }
   }
-  console.log("最终第一阶段pro", prompt);
+  console.log(`${model}的最终第一阶段prompt`, prompt);
   return prompt;
 }
