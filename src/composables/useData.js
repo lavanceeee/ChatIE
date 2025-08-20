@@ -1,9 +1,9 @@
 import axios from "axios";
 import { getResponse } from "./api";
 import { reg } from "../utils/regs";
-import { loadPattern, buildPrompt, replacePrompt } from "../utils/loadPattern";
+import { loadPattern, buildPrompt, replacePrompt } from "./loadPattern";
 import storeData from "../store";
-
+import { callAPI } from "./callAPI";
 
 export async function getUsersForm(selectedPattern, usersInputForm) {
     
@@ -17,23 +17,34 @@ export async function getUsersForm(selectedPattern, usersInputForm) {
     */
     storeData.loadParameter(usersInputForm, selectedPattern);
 
-    loadPattern(); //坑：异步函数加上await否则后面结果接到未定义的值。
-
-    const {sentence: sentence, usersPattern: usersPattern, usersKey: usersKey} = usersInputForm;
+    //大坑: 不能直接统一变量，还未赋值；
+    loadPattern(); 
 
     let stage = "stage_1";
 
     let orginal_prompt = await buildPrompt(stage);
 
-    //stage_1: 替换关键词
-    const prompt_stage1 = replacePrompt (stage, orginal_prompt);
+    let prompt = replacePrompt (stage, orginal_prompt);
 
-    console.log(prompt_stage1);
+    console.log("最终提示词：" , prompt);
 
-    
+    const result = callAPI(prompt);
 
-    
+    return result;
 
-    
-    
+    /*
+    加载stage_2的模板
+    构建第二次的提示词
+    */
+    // stage = "stage_2";
+
+    // orginal_prompt = await buildPrompt(stage);
+    // console.log("第二阶段的原本模板：", orginal_prompt);
+
+    // //构建提示词
+    // prompt = replacePrompt(stage, orginal_prompt, relations_in_stage_1);
+    // console.log("第二阶段构建好的提示词", prompt);
+
+    // //第二次调用
+    // await callAPI(stage, prompt);
 }

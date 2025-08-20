@@ -1,16 +1,17 @@
 import axios from "axios";
-import storeData from '../store';
+import storeData from "../store";
 
 //加载提示词模板
 export async function loadPattern() {
-  console.log(typeof(storeData.getPattern()));
-  console.log(storeData.getPattern());
-
   if (storeData.getPattern()) {
     console.log("不空");
-    //不空
-    return;
 
+    console.log(storeData.getPattern());
+    console.log(typeof storeData.getPattern());
+
+    //string转Object对象
+    const pattern = JSON.parse(storeData.getPattern());
+    storeData.setPattern(pattern);
   } else {
     console.log("空");
     const language = storeData.getLanguage();
@@ -52,7 +53,7 @@ export async function buildPrompt(stage) {
 /*
 在这里进行原提示词的替换
 */
-export function replacePrompt(stage, orginal_prompt) {
+export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
   const sentence = storeData.getSentence();
   const model = storeData.getModel();
   const pattern = storeData.getPattern();
@@ -63,16 +64,18 @@ export function replacePrompt(stage, orginal_prompt) {
     case "RE":
       switch (stage) {
         case "stage_1":
-
           orginal_prompt = orginal_prompt.replace("$sentence", sentence);
+          console.log("pattern", pattern);
           prompt = orginal_prompt.replace("$relations", pattern["rtl"]);
           break; //坑：忘记break，case穿透
 
         case "stage_2":
-          prompt = orginal_prompt.replace("$stl", pattern["stl"]);
-          prompt = orginal_prompt.replace("otl", pattern["otl"]);
+          orginal_prompt = orginal_prompt.replace(/\$stl/g, pattern["stl"]); //替换全部
+          orginal_prompt = orginal_prompt.replace(/\$otl/g, pattern["otl"]);
+          prompt = orginal_prompt.replace("$relation", result_of_stage1);
           break;
       }
   }
+  console.log("最终第一阶段pro", prompt);
   return prompt;
 }

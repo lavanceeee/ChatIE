@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, watch, computed } from "vue";
 import { getUsersForm } from "../composables/useData";
+import { marked } from "marked";
 
 const selectedPattern = reactive({
   selectedLanguage: "eng",
@@ -14,7 +15,7 @@ const usersInputForm = reactive({
 });
 
 //提取结果
-const result = ref([]);
+const result = ref("");
 
 //清空功能，放在watch前面初始化
 const clearInput = () => {
@@ -52,7 +53,9 @@ const submmitInput = async () => {
 
   //submmit users input
   //坑：不能直接覆盖ref对象, 且函数是异步的
-  result.value = await getUsersForm(selectedPattern, usersInputForm);
+  const result_orginal = await getUsersForm(selectedPattern, usersInputForm);
+  result.value = marked.parse(result_orginal);
+
 };
 
 </script>
@@ -131,18 +134,8 @@ const submmitInput = async () => {
 
   <div class="result-container">
     <h3 style="margin-top: 0">Result:</h3>
-    <p>sentence:</p>
-    <ul>
-      <li>{{ usersInputForm.sentence }}</li>
-    </ul>
-    <p>pattern:</p>
-    <ul>
-      <li v-for="(line, index) in patternOnBottom" :key="index">{{ line }}</li>
-    </ul>
-    <p>result:</p>
-    <ul>
-      <li v-for="(line, index) in result" :key="index"> {{ line }}</li>
-    </ul>
+
+    <div v-html="result"></div>
   </div>
 </template>
 

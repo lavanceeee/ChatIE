@@ -27,6 +27,10 @@ class StoreData {
         this.store.InputForm.usersPattern = pattern;
     }
 
+    getAPIKey() {
+        return this.store.InputForm.usersKey;
+    }
+
     //加载参数
     loadParameter(usersInputForm, selectedPattern) {
       this.store.InputForm = usersInputForm;
@@ -36,6 +40,8 @@ class StoreData {
     
       console.log("store", this.store.InputForm);
       console.log("store:", this.store.Pattern);
+
+      console.log(this.getLanguage());
     }
 }
 
