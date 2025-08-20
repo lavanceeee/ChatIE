@@ -6,11 +6,11 @@
 
 ## What I have done
 
-[X] double language Information Extraction
+- [x] double language Information Extraction
 
-[X] basic interface
+- [x] basic interface
 
-[] visualization and save function of IE result 
+- [ ] visualization and save function of IE result 
 
 1. I rebuilt the entire project using JS making it more clean and pure: anandoned Flask and integrated them into fronted.
 
