@@ -14,9 +14,9 @@
 
 1. I rebuilt the entire project using JS making it more clean and pure: anandoned Flask and integrated them into fronted.
 
-2. I restructured all processing logic in a more systematic and engineering-oriented way: I found numerous "unreasonable" varable and overly complex processing logic, which made the entire project "bloated", I applied layered processing and logical decouping to reduce complexity and make the project easier to understand.
+2. I restructured all processing logic in a more systematic and engineering-oriented way: I found numerous "unreasonable" varable and overly complex processing logic, which made the entire project "bloated"🤔, I applied layered processing and logical decouping to reduce complexity and make the project easier to understand.
 
-## What I learned 
+## What I learned 🤜
 
 Zero-shot Information Extraction attemtps to get structured information using LLMs also prompt-engineering. Using modern LLMs API, such as ChatGPT, DeepSeek, structured information extraction has been achieved through prompt-driven, multi-turn conversations.
 
