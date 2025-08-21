@@ -1,6 +1,3 @@
-import axios from "axios";
-import { getResponse } from "./api";
-import { reg } from "../utils/regs";
 import { loadPattern, buildPrompt, replacePrompt } from "./loadPattern";
 import storeData from "../store";
 import { callAPI } from "./callAPI";

@@ -26,7 +26,7 @@ const clearInput = () => {
   });
 
   //清空结果
-  result.value = [];
+  result.value = "";
 };
 
 //监控中英文的变化
@@ -35,15 +35,6 @@ watch(
   () => clearInput(),
   { immediate: true } 
 );
-
-//将要渲染的pattern
-const patternOnBottom = computed(() => {
-  return Object.entries(usersInputForm)
-    .filter(
-      ([key, value]) => value !== "" && key !== "sentence" && key !== "usersKey"
-    )
-    .map(([key, value]) => `${key}: ${value}`);
-});
 
 const submmitInput = async () => {
   // if (!usersInputForm.sentence || !usersInputForm.usersKey) {
@@ -135,7 +126,18 @@ const submmitInput = async () => {
   <div class="result-container">
     <h3 style="margin-top: 0">Result:</h3>
 
-    <div v-html="result"></div>
+    <div> sentence: </div>
+
+    <ul>
+      <li>{{ usersInputForm.sentence }}</li>
+    </ul>
+
+    <div>pattern: </div>
+    <ul>
+      <li>{{ usersInputForm.usersPattern }}</li>
+    </ul>
+
+    <div v-html="result" class="table-container"></div>
   </div>
 </template>
 
@@ -193,5 +195,29 @@ const submmitInput = async () => {
   width: 35rem;
   /* height: 8rem; */
   padding: 20px;
+}
+
+.table-container ::v-deep table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 1rem;
+  text-align: left;
+}
+
+.table-container ::v-deep th,
+.table-container ::v-deep td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table-container ::v-deep th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #334155;
+}
+
+.table-container ::v-deep tr:hover {
+  background-color: #f1f5f9;
 }
 </style>

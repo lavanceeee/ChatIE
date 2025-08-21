@@ -3,14 +3,13 @@ import storeData from "../store";
 
 //加载提示词模板
 export async function loadPattern() {
-  if (storeData.getPattern()) {
+  if (storeData.getUsersPattern()) {
     console.log("不空");
 
-    console.log(storeData.getPattern());
-    console.log(typeof storeData.getPattern());
-
     //string转Object对象
-    const pattern = JSON.parse(storeData.getPattern());
+    //导致显示框的[object Object]bug
+    const pattern = JSON.parse(storeData.getUsersPattern());
+
     storeData.setPattern(pattern);
   } else {
     console.log("空");

@@ -19,12 +19,18 @@ class StoreData {
       return this.store.InputForm.sentence;
     }
     
-    getPattern() {
+    getUsersPattern() {
       return this.store.InputForm.usersPattern;
     }
 
+    //这个是最终的需要用的pattern
+    getPattern() {
+      return this.store.InputForm.pattern;
+    }
+
+    //不可以直接修改原pattern
     setPattern(pattern) {
-        this.store.InputForm.usersPattern = pattern;
+        this.store.InputForm.pattern = pattern;
     }
 
     getAPIKey() {
