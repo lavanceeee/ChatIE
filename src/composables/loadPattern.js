@@ -40,14 +40,19 @@ export async function buildPrompt(stage) {
 
   console.log("打开的promptFile", promptFile);
 
-  const response = await axios.post(promptFile);
+  try {
+    const response = await axios.post(promptFile, {
+      responseType: 'text'
+    });
+    if (response.status === 200) {
+      console.log("请求到了prompt");
 
-  if (response.status === 200) {
-    console.log("请求到了prompt");
-
-    const orginal_prompt = response.data;
-    console.log(orginal_prompt);
-    return orginal_prompt;
+      const orginal_prompt = response.data;
+      console.log(orginal_prompt);
+      return orginal_prompt;
+    }
+  } catch (error) {
+    return `请求提示词错误：${error}`;
   }
 }
 
@@ -60,7 +65,7 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
   const pattern = storeData.getPattern();
 
   console.log(pattern);
-  console.log(typeof(pattern));
+  console.log(typeof pattern);
 
   let prompt = "";
 
@@ -88,13 +93,19 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
           let etlDescription = "你好";
           console.log("进入第一阶段");
           orginal_prompt = orginal_prompt.replace("$sentence", sentence);
-          prompt = orginal_prompt.replace("$etl", JSON.stringify(pattern["etl"]));
+          prompt = orginal_prompt.replace(
+            "$etl",
+            JSON.stringify(pattern["etl"])
+          );
           console.log("-----=========", prompt);
           console.log("结束第一阶段");
           break;
 
         case "stage_2":
-          orginal_prompt = orginal_prompt.replace("$etl", JSON.stringify(pattern["etl"]));
+          orginal_prompt = orginal_prompt.replace(
+            "$etl",
+            JSON.stringify(pattern["etl"])
+          );
           prompt = orginal_prompt.replace("$first_stage", result_of_stage1);
 
           break;
