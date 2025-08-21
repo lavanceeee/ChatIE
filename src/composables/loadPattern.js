@@ -95,7 +95,9 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
           break;
 
         case "stage_2":
-          prompt = orginal_prompt.replace("$etl", JSON.stringify(pattern["etl"]));
+          orginal_prompt = orginal_prompt.replace("$etl", JSON.stringify(pattern["etl"]));
+          prompt = orginal_prompt.replace("$first_stage", result_of_stage1);
+
           break;
       }
       break;
