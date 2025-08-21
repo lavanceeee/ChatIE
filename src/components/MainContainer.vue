@@ -134,7 +134,7 @@ const submmitInput = async () => {
 
     <div>pattern: </div>
     <ul>
-      <li>{{ usersInputForm.usersPattern }}</li>
+      <li>{{ usersInputForm.usersPattern || "default"}}</li>
     </ul>
 
     <div v-html="result" class="table-container"></div>

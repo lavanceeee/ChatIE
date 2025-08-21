@@ -1,1 +1,11 @@
-According to the given sentence, please identify the entity whose type is "$etl".\nIf not present, answer: none.\nRespond in the form of a table with two columns and a header of (entity type, entity name):
+According The sentences given in the first stage, and the entity types you determined to exist in the first stage: "$first_stage", please identify the entity whose type is "$etl".\nIf not present, answer: none.\nRespond in the form of a table with two columns and a header of (entity type, entity name):
+
+Your answer must be comprehensive!
+
+example:
+
+User give you the sentence: "Yesterday Bob and his wife got divorced in Guangzhou."
+
+If you recognize:Life:Divorce":["Person","Time","Place"], YOUR ANSWER must include Person, Time and Place! and You must find all object: Person： not only Bob but his wife!
+
+Each line has only one entity type. Do not use , to split it up, but instead display it on multiple lines.
