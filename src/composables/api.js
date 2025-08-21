@@ -5,7 +5,7 @@ const BASE_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
 
 export async function getResponse(message, APIKey) {
 
-  const default_key = "1e7831be-0b31-4f62-94b0-e3202bcef1c9";
+  const default_key = "4c4054bc-8d13-4eb7-b4f9-14cb1699362f";
 
   const key = APIKey ?? default_key;
 
