@@ -57,6 +57,12 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
   const model = storeData.getModel();
   const pattern = storeData.getPattern();
 
+  
+
+
+  console.log(pattern);
+  console.log(typeof(pattern));
+
   let prompt = "";
 
   switch (model) {
@@ -74,18 +80,25 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
           prompt = orginal_prompt.replace("$relation", result_of_stage1);
           break;
       }
+      break; //大坑，忘记break了。
 
     case "EE":
+      console.log("见啦");
       switch (stage) {
         case "stage_1":
+          let etlDescription = "你好";
+          console.log("进入第一阶段");
           orginal_prompt = orginal_prompt.replace("$sentence", sentence);
-          prompt = orginal_prompt.replace("$etl", pattern["etl"]);
+          prompt = orginal_prompt.replace("$etl", JSON.stringify(pattern["etl"]));
+          console.log("-----=========", prompt);
+          console.log("结束第一阶段");
           break;
 
         case "stage_2":
-          prompt = orginal_prompt.replace("$etl", pattern["etl"]);
+          prompt = orginal_prompt.replace("$etl", JSON.stringify(pattern["etl"]));
           break;
       }
+      break;
 
     case "NER":
       switch (stage) {
@@ -98,7 +111,8 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
           prompt = orginal_prompt.replace("$etl", pattern["etl"]);
           break;
       }
+      break;
   }
-  console.log(`${model}的最终第一阶段prompt`, prompt);
+  console.log(`${model}的最终第${stage}阶段prompt`, prompt);
   return prompt;
 }
