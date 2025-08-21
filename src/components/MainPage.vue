@@ -1,33 +1,41 @@
 <template>
   <div class="top-container">
     <div class="title-container">
-      <div class="title">GPT4IE</div>
+      <div class="title">ChatIE</div>
 
       <div class="title_mark">
-        frok from <a href="https://github.com/cocacola-lab/ChatIE">cocacola-lab</a>
+        frok from
+        <a href="https://github.com/cocacola-lab/ChatIE">cocacola-lab</a>
       </div>
     </div>
 
     <div class="note-container">
       <details>
-        <summary>something you NEED to konw</summary>
+        <summary>NOTICE</summary>
 
         <p>
-          It's a rebuilt version of GPT4IE and I carry out the engineering
-          transformation of this project.
+          It's a rebuilt version of
+          <a href="https://github.com/cocacola-lab/ChatIE">ChatIE</a> and I
+          carry out the engineering transformation of this project.
         </p>
 
         <p>
-          This project uses DouBao for IE extration and I won't provide a
-          default AIP key, so your <span style="color:red">API key</span> is <span style="color:red">required</span>.
+          This project uses doubao API for IE extration and I will provide a
+          default AIP key, if it doesn't work, you can send
+          <a href="https://github.com/lavanceeee/ChatIE/issues">issue</a> to
+          tell me.
         </p>
 
         <p>
           You can
-          <a href="https://www.volcengine.com/product/doubao">register</a> and
-          get an account for free trail.
+          <a href="https://www.volcengine.com/product/doubao">register</a> your
+          own API key for free trail.
         </p>
       </details>
+
+      <div style="margin-top: 1rem">
+        <a href="https://github.com/lavanceeee/ChatIE">Github</a>
+      </div>
     </div>
 
     <table>

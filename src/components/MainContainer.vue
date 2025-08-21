@@ -37,16 +37,14 @@ watch(
 );
 
 const submmitInput = async () => {
-  // if (!usersInputForm.sentence || !usersInputForm.usersKey) {
-  //   alert("sentence and your API key is required");
-  //   return;
-  // }
+  if (!usersInputForm.sentence) {
+    alert("sentence is required");
+    return;
+  }
 
-  //submmit users input
   //坑：不能直接覆盖ref对象, 且函数是异步的
   const result_orginal = await getUsersForm(selectedPattern, usersInputForm);
   result.value = marked.parse(result_orginal);
-
 };
 
 </script>
@@ -134,8 +132,10 @@ const submmitInput = async () => {
 
     <div>pattern: </div>
     <ul>
-      <li>{{ usersInputForm.usersPattern || "default"}}</li>
+      <li>{{ usersInputForm.usersPattern}}</li>
     </ul>
+
+    <div>result:</div>
 
     <div v-html="result" class="table-container"></div>
   </div>
@@ -197,7 +197,7 @@ const submmitInput = async () => {
   padding: 20px;
 }
 
-.table-container ::v-deep table {
+.table-container :v-deep table {
   width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
@@ -205,19 +205,19 @@ const submmitInput = async () => {
   text-align: left;
 }
 
-.table-container ::v-deep th,
-.table-container ::v-deep td {
+.table-container :v-deep th,
+.table-container :v-deep td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #e2e8f0;
 }
 
-.table-container ::v-deep th {
+.table-container :v-deep th {
   background-color: #f8fafc;
   font-weight: 600;
   color: #334155;
 }
 
-.table-container ::v-deep tr:hover {
+.table-container :v-deep tr:hover {
   background-color: #f1f5f9;
 }
 </style>

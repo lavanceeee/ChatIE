@@ -24,6 +24,8 @@ export async function loadPattern() {
       console.log(default_pattern);
 
       storeData.setPattern(default_pattern);
+
+      console.log("xxxx", storeData.getPattern());
     }
   }
 }
@@ -56,9 +58,6 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
   const sentence = storeData.getSentence();
   const model = storeData.getModel();
   const pattern = storeData.getPattern();
-
-  
-
 
   console.log(pattern);
   console.log(typeof(pattern));

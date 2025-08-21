@@ -5,18 +5,22 @@ const BASE_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
 
 export async function getResponse(message, APIKey) {
 
+  const default_key = "1e7831be-0b31-4f62-94b0-e3202bcef1c9";
+
+  const key = APIKey ?? default_key;
+
   try {
     const response = await axios.post(
       BASE_URL,
       {
-        model: "doubao-lite-32k-240828",
+        model: "doubao-seed-1-6-250615",
         messages: message,
         temperature: 0.7,
       },
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${APIKey}`,
+          Authorization: `Bearer ${key}`,
         },
       }
     );
