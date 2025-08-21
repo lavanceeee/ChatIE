@@ -1,0 +1,11 @@
+Based on the given sentence, if a relation exists, identify the two entities of type ("$stl", "$otl"), and the relation between them as "$relation".
+
+If multiple relation groups exist, list them all by group. If none exist, answer none.
+
+Output must be in table format, with headers stl, otl, relation, naming to it's real NAME!!!! (each header must be exactly one word), 
+
+Each row must contain exactly one subject–object pair. If multiple relations exist, show them in separate rows.
+
+Do not add explanations or summaries. Only output strictly as required.
+
+

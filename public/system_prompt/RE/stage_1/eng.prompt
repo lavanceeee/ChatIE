@@ -1,0 +1,1 @@
+The given sentence is "$sentence"\n\nList of given relations: "$relations"\n\nWhat relations in the given list might be included in this given sentence?\nIf not present, answer: none.\nRespond as a tuple, e.g. (relation 1, relation 2, ......):

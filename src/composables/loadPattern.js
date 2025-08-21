@@ -16,7 +16,7 @@ export async function loadPattern() {
     const language = storeData.getLanguage();
     const model = storeData.getModel();
 
-    const file = `src/assets/default_match_pattern.json`;
+    const file = `default_match_pattern.json`;
     const response = await axios.post(file); //坑：忘记写异步了，直接访问属性是undefined
 
     if (response.status === 200) {
@@ -36,7 +36,7 @@ export async function buildPrompt(stage) {
   const language = storeData.getLanguage();
   const model = storeData.getModel();
 
-  const promptFile = `src/assets/system_prompt/${model}/${stage}/${language}.prompt`;
+  const promptFile = `system_prompt/${model}/${stage}/${language}.prompt`;
 
   console.log("打开的promptFile", promptFile);
 
