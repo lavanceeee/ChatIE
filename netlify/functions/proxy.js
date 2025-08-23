@@ -1,12 +1,12 @@
-const axios = require("axios");
+import axios from "axios";
 
 // 火山引擎API文档：https://www.volcengine.com/docs/82379/1298459
 const BASE_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
 
-exports.handler = async function(event) {
+export async function handler(event) {
   try {
     if (process.env.NODE_ENV !== "production") {
-      require("dotenv").config();
+      import('dotenv').then(d => d.config());
     }
 
     const { message, APIKey } = JSON.parse(event.body || "{}");
