@@ -20,10 +20,10 @@ const result = ref("");
 //清空功能，放在watch前面初始化
 const clearInput = () => {
   Object.keys(usersInputForm)
-  .filter((key) => key !== "usersKey")
-  .forEach((key) => {
-    usersInputForm[key] = "";
-  });
+    .filter((key) => key !== "usersKey")
+    .forEach((key) => {
+      usersInputForm[key] = "";
+    });
 
   //清空结果
   result.value = "";
@@ -33,7 +33,7 @@ const clearInput = () => {
 watch(
   () => selectedPattern.selectedLanguage,
   () => clearInput(),
-  { immediate: true } 
+  { immediate: true }
 );
 
 const submmitInput = async () => {
@@ -46,7 +46,6 @@ const submmitInput = async () => {
   const result_orginal = await getUsersForm(selectedPattern, usersInputForm);
   result.value = marked.parse(result_orginal);
 };
-
 </script>
 
 <template>
@@ -103,11 +102,11 @@ const submmitInput = async () => {
       v-model="usersInputForm.sentence"
     />
 
-    <input 
+    <input
       type="text"
       placeholder="pattern (optional)"
       v-model="usersInputForm.usersPattern"
-      >
+    />
 
     <input
       type="text"
@@ -124,15 +123,15 @@ const submmitInput = async () => {
   <div class="result-container">
     <h3 style="margin-top: 0">Result:</h3>
 
-    <div> sentence: </div>
+    <div>sentence:</div>
 
     <ul>
       <li>{{ usersInputForm.sentence }}</li>
     </ul>
 
-    <div>pattern: </div>
+    <div>pattern:</div>
     <ul>
-      <li>{{ usersInputForm.usersPattern}}</li>
+      <li>{{ usersInputForm.usersPattern }}</li>
     </ul>
 
     <div>result:</div>
@@ -197,7 +196,7 @@ const submmitInput = async () => {
   padding: 20px;
 }
 
-.table-container :v-deep table {
+.table-container :deep(table) {
   width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
@@ -205,19 +204,19 @@ const submmitInput = async () => {
   text-align: left;
 }
 
-.table-container :v-deep th,
-.table-container :v-deep td {
+.table-container :deep(th),
+.table-container :deep(td) {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #e2e8f0;
 }
 
-.table-container :v-deep th {
+.table-container :deep(th) {
   background-color: #f8fafc;
   font-weight: 600;
   color: #334155;
 }
 
-.table-container :v-deep tr:hover {
+.table-container :deep(tr:hover) {
   background-color: #f1f5f9;
 }
 </style>

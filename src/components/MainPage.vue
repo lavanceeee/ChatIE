@@ -39,20 +39,22 @@
     </div>
 
     <table>
-      <tr>
-        <td>RE</td>
-        <td>entity-relation joint extraction</td>
-      </tr>
+      <tbody>
+        <tr>
+          <td>RE</td>
+          <td>entity-relation joint extraction</td>
+        </tr>
 
-      <tr>
-        <td>NER</td>
-        <td>named entity recoginzation</td>
-      </tr>
+        <tr>
+          <td>NER</td>
+          <td>named entity recoginzation</td>
+        </tr>
 
-      <tr>
-        <td>EE</td>
-        <td>event extraction</td>
-      </tr>
+        <tr>
+          <td>EE</td>
+          <td>event extraction</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 
