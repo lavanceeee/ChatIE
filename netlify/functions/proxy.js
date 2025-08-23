@@ -5,7 +5,7 @@ const BASE_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
 
 export async function getResponse(message, APIKey) {
 
-  const default_key = "4c4054bc-8d13-4eb7-b4f9-14cb1699362f";
+  const default_key = process.env.API_KEY;
 
   const key = APIKey ?? default_key;
 
@@ -28,8 +28,6 @@ export async function getResponse(message, APIKey) {
     console.log(structuredIE);
     return structuredIE;
   } catch (error) {
-    return `API请求失败:", ${error}`;
-  } finally {
-    document.body.style.cursor = "default";
+    return `请求失败:", ${error}`;
   }
 }

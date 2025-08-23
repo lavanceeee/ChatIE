@@ -9,5 +9,5 @@ export function reg(text) {
   const removeParenthedes = text.slice(1, -1);
   return removeParenthedes.split(',').map(item => item.trim()).toString(); 
 
-  return rels;
+  //return rels;
 }

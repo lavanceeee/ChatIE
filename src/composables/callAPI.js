@@ -10,13 +10,17 @@ stage2: 进行一次拼接
 */
 
 import storeData from "../store";
-import { getResponse } from "./api";
+import { getResponse } from "../../netlify/functions/proxy";
 import { reg } from "../utils/regs";
 import { buildPrompt, replacePrompt } from "./loadPattern";
 
 const APIKey = storeData.getAPIKey();
 
-const default_API = "1e7831be-0b31-4f62-94b0-e3202bcef1c9";
+const usersLanguage = storeData.getLanguage();
+
+const content = usersLanguage === 'eng' 
+  ? "You are a senior NLP expert, and now you are required to output strictly according to the user's prompt." 
+  : "你是一名资深NLP语义提取专家，现在要求你严格按照用户的提示进行语义提取和输出。";
 
 export async function callAPI(prompt_stage1) {
   //stage1
@@ -24,15 +28,14 @@ export async function callAPI(prompt_stage1) {
   let message_stage1 = [
     {
       role: "system",
-      content:
-        "You are a senior NLP export, and now you are required to output strictly according to the user's prompt.",
+      content: content,
     },
     {
       role: "user",
       content: prompt_stage1,
     },
   ];
-  const response = await getResponse(message_stage1, default_API);
+  const response = await getResponse(message_stage1, APIKey);
   console.log("最终的结果是：", response);
 
   const response_in_stage_1 = reg(response); //string
@@ -47,9 +50,6 @@ export async function callAPI(prompt_stage1) {
       content: response,
     },
   ];
-
-  console.log(message_stage2);
-  console.log(typeof message_stage2);
 
   const stage = "stage_2";
 
