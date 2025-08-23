@@ -1,4 +1,5 @@
 import axios from "axios";
+import dotenv from "dotenv";
 
 // 火山引擎API文档：https://www.volcengine.com/docs/82379/1298459
 const BASE_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
