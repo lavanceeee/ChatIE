@@ -26,3 +26,6 @@ dist-ssr
 .VSCodeCOunter
 .env
 
+
+# Local Netlify folder
+.netlify
