@@ -22,9 +22,7 @@ export async function getUsersForm(selectedPattern, usersInputForm) {
 
   let prompt = replacePrompt(stage, orginal_prompt);
 
-  console.log("最终提示词：", prompt);
-
-  const result = callAPI(prompt);
+  const result = await callAPI(prompt);
 
   document.body.style.cursor = "default";
   

@@ -1,7 +1,14 @@
 :root {
-  font-family:  system-ui, Helvetica,  Avenir, Arial, sans-serif;
+  font-family: system-ui, Helvetica, Avenir, Arial, sans-serif;
 }
 
-body {
-  margin-bottom: 20px;
+* {
+  box-sizing: border-box;
+}
+
+#app {
+  max-width: 35rem;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
 }

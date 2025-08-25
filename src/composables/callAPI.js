@@ -1,21 +1,14 @@
-/*
-这里进行两次模型地调用并返回结果
-stage_1
-stage_2
-*/
-
-/*
-stage1: prompt -> 直接调用
-stage2: 进行一次拼接
-*/
 import storeData from "../store";
 import { reg } from "../utils/regs";
 import { buildPrompt, replacePrompt } from "./loadPattern";
 import { getResponse } from "./api";
+import { transformRE2Object } from "../utils/vis_utils";
 
 const APIKey = storeData.getAPIKey();
 
 const usersLanguage = storeData.getLanguage();
+
+const model = storeData.getModel();
 
 const content =
   usersLanguage === "eng"
@@ -43,8 +36,6 @@ export async function callAPI(prompt_stage1) {
 
     const response_in_stage_1 = reg(response); //string
 
-    console.log("第一阶段的回复", response_in_stage_1);
-
     //stage_2
     let message_stage2 = [
       //坑：不能直接赋值message_stage1.push()，是一个number
@@ -58,7 +49,6 @@ export async function callAPI(prompt_stage1) {
     const stage = "stage_2";
 
     let orginal_prompt_stage2 = await buildPrompt(stage);
-    console.log("第二阶段的原本模板：", orginal_prompt_stage2);
 
     //构建提示词
     const prompt_stage2 = replacePrompt(
@@ -66,18 +56,16 @@ export async function callAPI(prompt_stage1) {
       orginal_prompt_stage2,
       response_in_stage_1
     );
-    console.log("第二阶段构建好的提示词", prompt_stage2);
 
     message_stage2.push({
       role: "user",
       content: prompt_stage2,
     });
 
-    console.log(message_stage2);
-
     const response_stage2 = await getResponse(message_stage2, APIKey);
+
     return response_stage2;
-  
+    
   } catch (error) {
     alert(error);
   }
