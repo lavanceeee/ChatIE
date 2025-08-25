@@ -88,7 +88,7 @@ import MainContainer from "./MainContainer.vue";
 }
 
 table {
-  width: 35rem;
+  width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
   font-family: Arial, sans-serif;
@@ -103,7 +103,7 @@ td {
 }
 
 .note-container {
-  width: 35rem;
+  width: 100%;
   height: auto;
   padding: 0 10px;
 }
