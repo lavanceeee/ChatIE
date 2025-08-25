@@ -2,6 +2,8 @@
 
 **NOTE: It's a rebuilt version of [ChatIE](https://github.com/cocacola-lab/ChatIE) project from [CoLa Lab](https://github.com/cocacola-lab) BJTU**
 
+![show](./public/README/show.gif)
+
 [GPT4IE](https://github.com/lavanceeee/GPT4IE) is a clean version of ChatIE, which integrates two-stage framework into a unified system and using only one set of prompt. The result is equally execellent!
 
 ## What I have done
