@@ -45,7 +45,6 @@ export async function handler(event) {
     );
 
     const structuredIE = response.data.choices[0]?.message?.content || "";
-    console.log(`第一阶段返回的提示词：${structuredIE}`); 
 
     return {
       statusCode: 200,
