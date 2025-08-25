@@ -8,7 +8,7 @@ export function getRandomColor() {
     "#32ABA2",
     "#96ABA2",
     "#CDD66F",
-    "#481F6F"
+    "#481f6f57"
   ];
 
   const max = randomColor.length;

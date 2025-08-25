@@ -8,23 +8,27 @@ import { callAPI } from "./callAPI";
 没有就先加载模板->加载提示词然后再传给后续的请求
 */
 export async function getUsersForm(selectedPattern, usersInputForm) {
-  //加载可视化
-  document.body.style.cursor = "wait";
+  try {
+    //加载可视化
+    document.body.style.cursor = "wait";
 
-  storeData.loadParameter(usersInputForm, selectedPattern);
+    storeData.loadParameter(usersInputForm, selectedPattern);
 
-  //大坑: 不能直接统一变量，还未赋值；
-  loadPattern();
+    //大坑: 不能直接统一变量，还未赋值；
+    loadPattern();
 
-  let stage = "stage_1";
+    let stage = "stage_1";
 
-  let orginal_prompt = await buildPrompt(stage);
+    let orginal_prompt = await buildPrompt(stage);
 
-  let prompt = replacePrompt(stage, orginal_prompt);
+    let prompt = replacePrompt(stage, orginal_prompt);
 
-  const result = await callAPI(prompt);
+    const result = await callAPI(prompt);
 
-  document.body.style.cursor = "default";
-  
-  return result;
+    document.body.style.cursor = "default";
+
+    return result;
+  } catch (error) {
+    alert(error);
+  }
 }

@@ -2,13 +2,10 @@ import storeData from "../store";
 import { reg } from "../utils/regs";
 import { buildPrompt, replacePrompt } from "./loadPattern";
 import { getResponse } from "./api";
-import { transformRE2Object } from "../utils/vis_utils";
 
 const APIKey = storeData.getAPIKey();
 
 const usersLanguage = storeData.getLanguage();
-
-const model = storeData.getModel();
 
 const content =
   usersLanguage === "eng"
@@ -19,6 +16,8 @@ export async function callAPI(prompt_stage1) {
   try {
     //stage1
     //构建提示词
+    const stage1_start = Date.now();
+
     let message_stage1 = [
       {
         role: "system",
@@ -32,7 +31,9 @@ export async function callAPI(prompt_stage1) {
 
     const response = await getResponse(message_stage1, APIKey);
 
-    console.log("最终的结果是：", response);
+    const stage1_time = Date.now() - stage1_start;
+    console.log(`第一阶段花费, ${stage1_time}`);
+    const stage2_start = Date.now();
 
     const response_in_stage_1 = reg(response); //string
 
@@ -64,8 +65,11 @@ export async function callAPI(prompt_stage1) {
 
     const response_stage2 = await getResponse(message_stage2, APIKey);
 
+    const stage2_time = Date.now() - stage2_start;
+    console.log(`第二阶段花了, ${stage2_time}`);
+
     return response_stage2;
-    
+
   } catch (error) {
     alert(error);
   }

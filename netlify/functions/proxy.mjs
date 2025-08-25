@@ -1,13 +1,11 @@
-import axios from "axios";
-import dotenv from "dotenv";
-
-// 火山引擎API文档：https://www.volcengine.com/docs/82379/1298459
 const BASE_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
 
 export async function handler(event) {
   try {
+    const start = Date.now();
+
     if (process.env.NODE_ENV !== "production") {
-      import('dotenv').then(d => d.config());
+      await import("dotenv").then((d) => d.config());
     }
 
     const { message, APIKey } = JSON.parse(event.body || "{}");
@@ -15,7 +13,7 @@ export async function handler(event) {
     if (!message) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "缺少必要参数：message" })
+        body: JSON.stringify({ error: "缺少必要参数：message" }),
       };
     }
 
@@ -25,41 +23,47 @@ export async function handler(event) {
     if (!key) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "API密钥未配置，请检查环境变量或请求参数" })
+        body: JSON.stringify({
+          error: "API密钥未配置，请检查环境变量或请求参数",
+        }),
       };
     }
 
-    const response = await axios.post(
-      BASE_URL,
-      {
+    const response = await fetch(BASE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${key}`,
+      },
+      body: JSON.stringify({
         model: "doubao-seed-1-6-250615",
         messages: message,
-        temperature: 0.7,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${key}`,
-        },
-      }
-    );
+      }),
+    });
 
-    const structuredIE = response.data.choices[0]?.message?.content || "";
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`请求API失败，${errorBody}`);
+    }
+
+    const data = await response.json();
+    const structuredIE = data.choices?.[0]?.message?.content || "";
+
+    const duration = Date.now() - start;
+    console.log(`这次后端请求花了：${duration}`);
 
     return {
       statusCode: 200,
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*" // 允许跨域
+        "Access-Control-Allow-Origin": "*", // 允许跨域
       },
       body: JSON.stringify({ result: structuredIE }),
     };
-
   } catch (error) {
     const errorDetails = {
       message: error.message,
-      response: error.response?.data || "无响应",
-      status: error.response?.status || "无状态码",
+      stack: error.stack,
     };
     return {
       statusCode: 500,

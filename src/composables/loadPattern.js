@@ -1,32 +1,29 @@
-import axios from "axios";
 import storeData from "../store";
 
 //加载提示词模板
 export async function loadPattern() {
   if (storeData.getUsersPattern()) {
-    console.log("不空");
-
     //string转Object对象
     //导致显示框的[object Object]bug
     const pattern = JSON.parse(storeData.getUsersPattern());
 
     storeData.setPattern(pattern);
   } else {
-    console.log("空");
     const language = storeData.getLanguage();
     const model = storeData.getModel();
 
     const file = `default_match_pattern.json`;
-    const response = await axios.get(file); //坑：忘记写异步了，直接访问属性是undefined
+    const response = await fetch(file); //坑：忘记写异步了，直接访问属性是undefined
 
-    if (response.status === 200) {
-      const default_pattern = response.data[language][model];
-      console.log(default_pattern);
-
-      storeData.setPattern(default_pattern);
-
-      console.log("xxxx", storeData.getPattern());
+    if (!response.ok) {
+      throw new Error(`failed loading default pattern: ${response.status}`);
     }
+
+    const data = await response.json();
+
+    const default_pattern = data[language][model];
+
+    storeData.setPattern(default_pattern);
   }
 }
 
@@ -38,23 +35,16 @@ export async function buildPrompt(stage) {
 
   const promptFile = `system_prompt/${model}/${stage}/${language}.prompt`;
 
-  console.log("打开的promptFile", promptFile);
+  //必须是get
+  const response = await fetch(promptFile);
 
-  try {
-    //必须是get
-    const response = await axios.get(promptFile, {
-      responseType: 'text'
-    });
-    if (response.status === 200) {
-      console.log("请求到了prompt");
-
-      const orginal_prompt = response.data;
-      console.log(orginal_prompt);
-      return orginal_prompt;
-    }
-  } catch (error) {
-    return `请求提示词错误：${error}`;
+  if (!response.ok) {
+    throw new Error(`failed loading prompt: ${response.status}`);
   }
+
+  const orginal_prompt = await response.text();
+
+  return orginal_prompt;
 }
 
 /*
@@ -65,9 +55,6 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
   const model = storeData.getModel();
   const pattern = storeData.getPattern();
 
-  console.log(pattern);
-  console.log(typeof pattern);
-
   let prompt = "";
 
   switch (model) {
@@ -75,7 +62,6 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
       switch (stage) {
         case "stage_1":
           orginal_prompt = orginal_prompt.replace("$sentence", sentence);
-          console.log("pattern", pattern);
           prompt = orginal_prompt.replace("$relations", pattern["rtl"]);
           break; //坑：忘记break，case穿透
 
@@ -85,21 +71,16 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
           prompt = orginal_prompt.replace("$relation", result_of_stage1);
           break;
       }
-      break; //大坑，忘记break了。
+      break; //坑，忘记break了。
 
     case "EE":
-      console.log("见啦");
       switch (stage) {
         case "stage_1":
-          let etlDescription = "你好";
-          console.log("进入第一阶段");
           orginal_prompt = orginal_prompt.replace("$sentence", sentence);
           prompt = orginal_prompt.replace(
             "$etl",
             JSON.stringify(pattern["etl"])
           );
-          console.log("-----=========", prompt);
-          console.log("结束第一阶段");
           break;
 
         case "stage_2":
@@ -126,6 +107,5 @@ export function replacePrompt(stage, orginal_prompt, result_of_stage1) {
       }
       break;
   }
-  console.log(`${model}的最终第${stage}阶段prompt`, prompt);
   return prompt;
 }
