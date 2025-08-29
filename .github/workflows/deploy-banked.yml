@@ -2,20 +2,25 @@ name: Deploy Banked Services
 
 on:
   push:
-    branches:
-      - main   # 只有推送到 main 分支时触发
+    branches: [ main ]
 
 jobs:
-  deploy-banked:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. 检出代码
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # 2. 部署到服务器
-      - name: Deploy banked services
+      - name: Upload project files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          source: "banked/*"
+          target: "/var/www/banked/chatie_banked"
+
+      - name: Deploy service
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -23,24 +28,9 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT }}
           script: |
-            set -e
-
-            echo ">>> 停止旧服务"
-            sudo systemctl stop chatie_banked || true
-
-            echo ">>> 同步代码到服务器"
-            rsync -avz --delete ./banked/ /var/www/banked/chatie_banked/
-
             cd /var/www/banked/chatie_banked
-
-            echo ">>> 创建虚拟环境（如果不存在）"
             if [ ! -d "venv" ]; then
               python3 -m venv venv
             fi
-
-            echo ">>> 激活虚拟环境并安装依赖"
-            source venv/bin/activate
-            pip install -r requirements.txt
-
-            echo ">>> 重启后端服务"
+            ./venv/bin/pip install -r requirements.txt
             sudo systemctl restart chatie_banked
