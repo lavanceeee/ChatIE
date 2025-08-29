@@ -1,0 +1,42 @@
+name: deploy banked services
+
+on:
+  push:
+    branches:
+      -main
+
+jobs:
+  deploy-banked:
+    runs-on: ubuntu-latest
+
+    steps:
+      -name: Checkout repository
+      uses: actions/checkout@v3
+
+      - nmae: Install dependences
+      run: |
+        cd banked
+        pip install -r requirements.txt 
+
+
+      -nmae: Deploy banked services
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: ${{ secrets.VPS_PORT }}
+
+        script: |
+            sudo systemctl stop chatie_banked || true
+
+            # 上传后端代码
+            rsync -avz backend/ /var/www/banked/chatie_banked
+
+            # 激活虚拟环境并安装依赖
+            cd var/www/banked/chatie_banked
+            source venv/bin/activate
+            pip install -r requirements.txt
+
+            # 重启后端服务
+            sudo systemctl restart chatie_banked
