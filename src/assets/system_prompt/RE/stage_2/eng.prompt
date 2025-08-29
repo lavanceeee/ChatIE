@@ -1,11 +1,11 @@
-Based on the given sentence, if a relation exists, identify the two entities of type ("$stl", "$otl"), and the relation between them as "$relation".
+Based on the given sentence, if relationships exist, identify two entities of types ("stl","stl", "
+stl","otl") and the relationship "$relation" between them.
 
-If multiple relation groups exist, list them all by group. If none exist, answer none.
-
-Output must be in table format, with headers stl, otl, relation, naming to it's real NAME!!!! (each header must be exactly one word), 
-
-Each row must contain exactly one subject–object pair. If multiple relations exist, show them in separate rows.
-
-Do not add explanations or summaries. Only output strictly as required.
-
-
+From the original sentence, find existing type and relation groups, then list them!
+Each item must strictly follow the !!original vocabulary from the sentence!! in output, in the most concise form. Do not summarize or modify!
+Split multiple items in otl into separate individual entries, for example, do not use "water, sugar, carbon dioxide etc." but rather one entity per line.
+Most importantly: each cell in each row must contain only one entity or one relation. For multiple items, please list them separately across multiple rows.
+If multiple relation groups exist, list all relation groups by group. If none exist, answer "None".
+Output must use table format with headers: stl, otl, relation.
+Each row must contain exactly one subject-object pair. If multiple relationships exist, display them in separate rows.
+Do not add explanations or summaries. Output strictly as required only.

@@ -70,6 +70,8 @@ pattern:
 
 result:
 
+![result](./test/vis/ER01.png)
+
 ![result](./test/doubao-lite-32k-240828/RE/ch/t03-ch.png)
 
 sentence:
@@ -79,6 +81,8 @@ sentence:
 pattern:
 
 + {"rtl": ["manufactured by", "equipped with"], "stl": ["vehicle"], "otl": ["company", "technology"]}
+
+![result](./test/vis/RE_en.png)
 
 ![result](./test/doubao-lite-32k-240828/RE/en/t03.png)
 
@@ -103,7 +107,23 @@ pattern:
 
 result:
 
+![result](./test/vis/EE_ch.png)
+
 ![result](./test/deepseek-r1/EE/ch/t01.png)
+
+sentence:
++ In March 2023, over 500 workers at a California tech factory went on strike due to poor working conditions.
+
+pattern:
+
++ default
+
+result:
+
+![result](./test/vis/EE_en.png)
+
+![result](./test/doubao-lite-32k-240828/EE/en/t01.png)
+
 ### NER
 
 sentence:
@@ -116,6 +136,8 @@ pattern：
 
 result：
 
+![result](./test/vis/NER_ch.png)
+
 ![result](./test/doubao-lite-32k-240828/NER/ch/t05.png)
 
 sentence:
@@ -124,6 +146,10 @@ sentence:
 pattern:
 
 + {"etl": ["PROD", "ORG", "DATE", "DATE"]}
+
+result:
+
+![result](./test/vis/NER_en.png)
 
 ![result](./test/doubao-lite-32k-240828/NER/en/t03.png)
 
