@@ -1,4 +1,4 @@
-name: Deploy Banked Services
+name: Deploy Chatie Banked
 
 on:
   push:
@@ -7,17 +7,20 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
-      - name: Upload project files
+      - name: Upload backend files
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT }}
-          source: "banked/*"
+          source: |
+            app.py
+            requirements.txt
           target: "/var/www/banked/chatie_banked"
 
       - name: Deploy service
