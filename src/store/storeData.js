@@ -41,13 +41,6 @@ class StoreData {
     loadParameter(usersInputForm, selectedPattern) {
       this.store.InputForm = usersInputForm;
       this.store.Pattern = selectedPattern;
-
-      console.log(this.store.InputForm.usersPattern);
-    
-      console.log("store", this.store.InputForm);
-      console.log("store:", this.store.Pattern);
-
-      console.log(this.getLanguage());
     }
 }
 
