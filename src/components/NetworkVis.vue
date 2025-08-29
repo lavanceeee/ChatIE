@@ -3,10 +3,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, reactive } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { DataSet, Network } from "vis-network/standalone";
 import { getRandomColor } from "../utils/vis_utils";
-import { transformRE2Object } from "../utils/vis_utils";
+import { mdConverter } from "../utils/vis_utils";
+import storeData from "../store";
 
 const container = ref(null);
 let network = null;
@@ -27,13 +28,14 @@ watch(
   () => props.responseData,
   (newValue) => {
     if (newValue) {
-      result.value = { ...transformRE2Object(newValue) };
+      result.value = { ...mdConverter(newValue) };
+      console.log(result.value);
       //用户点击clear
     } else {
       //clear
       nodes.clear();
       edges.clear();
-      result = {};
+      result.value = {};
     }
   }
 );
@@ -48,6 +50,24 @@ const updateNetwork = (data) => {
   nodes.clear();
   edges.clear();
 
+  const model = storeData.getModel();
+
+  if (model === "RE") {
+    // RE模式：显示节点和边
+    updateNetworkForRE(data);
+  } else if (model === "NER" || model === "EE") {
+    // NER或EE模式：只显示节点
+    updateNetworkForNERorEE(data);
+  }
+
+  if (network) {
+    network.setData({ nodes, edges });
+  } else {
+    initNetwork();
+  }
+};
+
+const updateNetworkForRE = (data) => {
   const nodeMap = new Map();
   let id = 1;
 
@@ -69,6 +89,7 @@ const updateNetwork = (data) => {
       id++;
     }
 
+    // 添加边
     edges.add({
       from: nodeMap.get(source),
       to: nodeMap.get(target),
@@ -76,28 +97,49 @@ const updateNetwork = (data) => {
       arrows: "to",
     });
   });
+};
 
-  if (network) {
-    network.setData({ nodes, edges });
-  } else {
-    initNetwork();
-  }
+const updateNetworkForNERorEE = (data) => {
+  // NER或EE模式：只添加节点，不添加边
+  data.result.forEach((item, index) => {
+    nodes.add({
+      id: index + 1,
+      label: item,
+      color: getRandomColor(),
+    });
+  });
 };
 
 const initNetwork = () => {
   if (container.value && nodes && edges) {
+    const model = storeData.getModel();
+
     const options = {
       width: "100%",
       height: "100%",
       nodes: {
-        size: 30,
+        size: 16,
         shape: "ellipse",
+        font: {
+          color: "white",
+        }
       },
       edges: {
         width: 2,
         arrows: "to",
+        length: model === "RE" ? 200 : undefined,
       },
+      physics: {
+        enabled: model === "RE",
+      },
+      layout:
+        model === "RE"
+          ? {}
+          : {
+              randomSeed: 2,
+            },
     };
+
     network = new Network(container.value, { nodes, edges }, options);
   }
 };
@@ -107,10 +149,6 @@ watch(
   (newVal) => {
     // 当数据有效时更新网络
     if (newVal && Object.keys(newVal).length > 0) {
-      // 确保数据集已初始化
-      if (!nodes || !edges) {
-        initDataSets();
-      }
       updateNetwork(newVal);
     }
   },
@@ -121,7 +159,6 @@ onMounted(() => {
   initDataSets();
 });
 </script>
-
 
 <style scoped>
 #vis-container {

@@ -1,4 +1,5 @@
-//get a random color for card
+import storeData from "../store";
+
 export function getRandomColor() {
   const randomColor = [
     "#637DBB",
@@ -8,13 +9,13 @@ export function getRandomColor() {
     "#32ABA2",
     "#96ABA2",
     "#CDD66F",
-    "#481f6f57"
+    "#5f59657a",
   ];
 
   const max = randomColor.length;
 
   return randomColor[Math.floor(Math.random() * max)];
-};
+}
 
 /*
 transform md table to object
@@ -24,10 +25,24 @@ transform md table to object
 | 张三   | 朋友 | 李四     |
 | 李四   | 同事 | 王五     |
 */
-export function transformRE2Object(markdown) {
+
+export function mdConverter(markdown) {
+  const model = storeData.getModel();
+
+  switch (model) {
+    case "RE":
+      return convertRE(markdown);
+    case "NER":
+      return convertNERorEE(markdown);
+    case "EE":
+      return convertNERorEE(markdown);
+  }
+}
+
+function convertRE(markdown) {
   const lines = markdown.split("\n").filter((line) => line.trim() !== "");
   if (lines.length < 2) {
-    throw new Error("无表格");
+    return { stl: [], otl: [], relation: [] };
   }
 
   const stl = [];
@@ -36,21 +51,38 @@ export function transformRE2Object(markdown) {
 
   for (let i = 2; i < lines.length; i++) {
     const row = lines[i]
-        .split("|")
-        .map(cell => cell.trim())
-        .filter(cell => cell !== "");
+      .split("|")
+      .map((cell) => cell.trim())
+      .filter((cell) => cell !== "");
 
     stl.push(row[0]);
     otl.push(row[1]);
-    relation.push(row[2]); 
+    relation.push(row[2]);
   }
 
-  return { stl, otl, relation }
+  return { stl, otl, relation };
+}
 
-};
+function convertNERorEE(markdown) {
+  const lines = markdown.split("\n").filter((line) => line.trim() !== "");
 
-// const md = 
-// `| stl     | otl   | reaction |
+  if (lines.length < 2) return {};
+
+  const result = [];
+
+  for (let i = 2; i < lines.length; i++) {
+    const row = lines[i]
+      .split("|")
+      .map((cell) => cell.trim())
+      .filter((cell) => cell !== "");
+
+    result.push(`${row[0]}：${row[1]}`);
+  }
+
+  return { result };
+}
+
+// const md = `| stl     | otl   | reaction |
 // |---------|-------|----------|
 // | 《如懿传》 | 汪俊   | 导演      |
 // | 《如懿传》 | 周迅   | 主演      |
@@ -60,8 +92,8 @@ export function transformRE2Object(markdown) {
 // | 《如懿传》 | 辛芷蕾  | 主演      |
 // | 《如懿传》 | 童瑶   | 主演      |
 // | 《如懿传》 | 李纯   | 主演      |
-// | 《如懿传》 | 邬君梅  | 主演      |`
+// | 《如懿传》 | 邬君梅  | 主演      |`;
 
-// const rows = transformER2Object(md);
+// const rows = NER2Object(md);
 
 // console.log(rows);

@@ -1,10 +1,8 @@
 <template>
   <div class="result-container">
-
     <h3 style="margin-top: 0">Result:</h3>
 
     <div v-html="result" class="table-container"></div>
-
   </div>
 </template>
 
@@ -21,14 +19,16 @@ const props = defineProps({
   },
 });
 
-watch(() => props.responseData, (newValue) => {
-  if (!newValue) {
-    console.log("即将清除result");
-    result.value = "";
+watch(
+  () => props.responseData,
+  (newValue) => {
+    if (!newValue) {
+      console.log("即将清除result");
+      result.value = "";
+    }
+    result.value = marked.parse(newValue);
   }
-
-  result.value = marked.parse(newValue);
-});
+);
 </script>
 
 <style scoped>

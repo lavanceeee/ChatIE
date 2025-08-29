@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from "vue";
+import { ref, reactive } from "vue";
 import { getUsersForm } from "../composables/useData";
 import FormSection from "./FormSection.vue";
 import NetworkVis from "./NetworkVis.vue";
@@ -53,8 +53,7 @@ const submitInput = async () => {
 
   try {
     //不能直接覆盖ref对象, 且函数是异步的
-    const result_orginal = await getUsersForm(selectedPattern, usersInputForm);
-    result.value = result_orginal;
+    result.value = await getUsersForm(selectedPattern, usersInputForm);
   } catch (error) {
     alert(error);
   } finally {

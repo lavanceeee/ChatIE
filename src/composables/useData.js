@@ -25,6 +25,8 @@ export async function getUsersForm(selectedPattern, usersInputForm) {
 
     const result = await callAPI(prompt);
 
+    console.log(result);
+
     document.body.style.cursor = "default";
 
     return result;
