@@ -1,12 +1,11 @@
-name: Deploy Chatie Banked  
+name: Deploy Chatie Banked
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  
+  workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'  
-
+    - cron: '0 3 * * *'
 
 jobs:
   deploy-to-server:
@@ -14,20 +13,20 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: 检出GitHub仓库代码
-        uses: actions/checkout@v4  
-
+        uses: actions/checkout@v4
+        
       - name: 上传后端文件到服务器
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT }}  
-          source: "app.py,requirements.txt"  
-          target: "/var/www/banked/chatie_banked"  
-
+          port: ${{ secrets.VPS_PORT }}
+          source: "app.py,requirements.txt"
+          target: "/var/www/banked/chatie_banked"
+          
       - name: service deploy
-        uses: appleboy/ssh-action@v0.1.7
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
@@ -41,37 +40,66 @@ jobs:
             ./venv/bin/pip install -r requirements.txt
             sudo systemctl restart chatie_banked
 
-
   sync-server-to-github:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
     steps:
-      - name: commit service code
+      - name: checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT }}  
-
-      - name: download code
-        uses: appleboy/scp-action@v1.0.0
+          token: ${{ secrets.PAT }}
+          
+      - name: download files from server
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
-          direction: download 
-          source: "/var/www/banked/chatie_banked/app.py,/var/www/banked/chatie_banked/requirements.txt"  # 服务器目标文件
-          target: "./" 
-          overwrite: true
-          debug: true
-
-      - name: update
+          script: |
+            # 将服务器文件内容写入到 GitHub runner
+            echo "--- Writing app.py content ---"
+            base64 -w 0 /var/www/banked/chatie_banked/app.py
+            echo ""
+            echo "--- Writing requirements.txt content ---"  
+            base64 -w 0 /var/www/banked/chatie_banked/requirements.txt
+          
+      - name: create files from server content
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            # 使用 scp 命令直接传输文件
+            scp /var/www/banked/chatie_banked/app.py ${{ secrets.VPS_USER }}@localhost:/tmp/app_sync.py || true
+            scp /var/www/banked/chatie_banked/requirements.txt ${{ secrets.VPS_USER }}@localhost:/tmp/requirements_sync.txt || true
+            
+      # 更简单的方案：直接通过 SSH 读取文件内容并写入本地
+      - name: sync files from server
+        run: |
+          # 使用 SSH 命令读取服务器文件
+          ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.VPS_SSH_KEY }}") \
+              -p ${{ secrets.VPS_PORT || 22 }} \
+              ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+              'cat /var/www/banked/chatie_banked/app.py' > app.py
+              
+          ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.VPS_SSH_KEY }}") \
+              -p ${{ secrets.VPS_PORT || 22 }} \
+              ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+              'cat /var/www/banked/chatie_banked/requirements.txt' > requirements.txt
+          
+      - name: commit and push changes
         run: |
           git config --global user.name "Sync Bot"
           git config --global user.email "bot@example.com"
           git add .
           if ! git diff --cached --quiet; then
-            git commit -m "Sync server changes $(date +%Y%m%d)"
-            git push origin main  
+            git commit -m "Sync server changes $(date +%Y%m%d-%H%M%S)"
+            git push origin main
+          else
+            echo "No changes to sync"
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}  
+          GITHUB_TOKEN: ${{ secrets.PAT }}
