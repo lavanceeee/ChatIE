@@ -27,6 +27,8 @@ def call_doubao_api():
         if not API_Key:
             error_msg = {"error": "还未设置APIKEY到环境变量"}
 
+            print(error_msg)
+
             return Response(
                 json.dumps(error_msg, ensure_ascii=False),
                 mimetype="application/json",
@@ -52,6 +54,8 @@ def call_doubao_api():
         )
 
     except Exception as e:
+         
+         print(e)
 
          return Response(
             json.dumps({"error": f"服务器端出错了：{str(e)}"}, ensure_ascii=False),
