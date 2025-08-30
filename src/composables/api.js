@@ -1,6 +1,6 @@
 export async function getResponse(message, APIKey) {
   try {
-    const response = await fetch("http://localhost:5000/api/call_doubao", {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/call_doubao`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

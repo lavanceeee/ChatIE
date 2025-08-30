@@ -24,7 +24,7 @@ dist-ssr
 %USERPROFILE%
 .vscode
 .VSCodeCOunter
-.env
+.env*
 
 # Local Netlify folder
 .netlify
