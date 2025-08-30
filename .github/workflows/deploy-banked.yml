@@ -52,7 +52,7 @@ jobs:
           token: ${{ secrets.PAT }}  
 
       - name: download code
-        uses: appleboy/scp-action@v0.16.0
+        uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
