@@ -57,38 +57,24 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
           script: |
-            # 将服务器文件内容写入到 GitHub runner
-            echo "--- Writing app.py content ---"
-            base64 -w 0 /var/www/banked/chatie_banked/app.py
-            echo ""
-            echo "--- Writing requirements.txt content ---"  
-            base64 -w 0 /var/www/banked/chatie_banked/requirements.txt
-          
-      - name: create files from server content
-        uses: appleboy/ssh-action@v1.0.3
+            # 创建临时目录并复制文件到可访问位置
+            mkdir -p /tmp/github_sync
+            cp /var/www/banked/chatie_banked/app.py /tmp/github_sync/app.py
+            cp /var/www/banked/chatie_banked/requirements.txt /tmp/github_sync/requirements.txt
+            
+            # 设置文件权限
+            chmod 644 /tmp/github_sync/*
+            
+      - name: copy files from server  
+        uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
-          script: |
-            # 使用 scp 命令直接传输文件
-            scp /var/www/banked/chatie_banked/app.py ${{ secrets.VPS_USER }}@localhost:/tmp/app_sync.py || true
-            scp /var/www/banked/chatie_banked/requirements.txt ${{ secrets.VPS_USER }}@localhost:/tmp/requirements_sync.txt || true
-            
-      # 更简单的方案：直接通过 SSH 读取文件内容并写入本地
-      - name: sync files from server
-        run: |
-          # 使用 SSH 命令读取服务器文件
-          ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.VPS_SSH_KEY }}") \
-              -p ${{ secrets.VPS_PORT || 22 }} \
-              ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-              'cat /var/www/banked/chatie_banked/app.py' > app.py
-              
-          ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.VPS_SSH_KEY }}") \
-              -p ${{ secrets.VPS_PORT || 22 }} \
-              ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-              'cat /var/www/banked/chatie_banked/requirements.txt' > requirements.txt
+          source: "/tmp/github_sync/app.py,/tmp/github_sync/requirements.txt"
+          target: "./"
+          strip_components: 2
           
       - name: commit and push changes
         run: |
