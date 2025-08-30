@@ -2,28 +2,32 @@ import storeData from "../store";
 
 //加载提示词模板
 export async function loadPattern() {
-  if (storeData.getUsersPattern()) {
-    //string转Object对象
-    //导致显示框的[object Object]bug
-    const pattern = JSON.parse(storeData.getUsersPattern());
+  try {
+    if (storeData.getUsersPattern()) {
+      //string转Object对象
+      //导致显示框的[object Object]bug
+      const pattern = JSON.parse(storeData.getUsersPattern());
 
-    storeData.setPattern(pattern);
-  } else {
-    const language = storeData.getLanguage();
-    const model = storeData.getModel();
+      storeData.setPattern(pattern);
+    } else {
+      const language = storeData.getLanguage();
+      const model = storeData.getModel();
 
-    const file = `default_match_pattern.json`;
-    const response = await fetch(file); //坑：忘记写异步了，直接访问属性是undefined
+      const file = `default_match_pattern.json`;
+      const response = await fetch(file); //坑：忘记写异步了，直接访问属性是undefined
 
-    if (!response.ok) {
-      throw new Error(`failed loading default pattern: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`failed loading default pattern: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      const default_pattern = data[language][model];
+
+      storeData.setPattern(default_pattern);
     }
-
-    const data = await response.json();
-
-    const default_pattern = data[language][model];
-
-    storeData.setPattern(default_pattern);
+  } catch (error) {
+    throw new Error(`不合法的JSON格式，请检查：${error}`);
   }
 }
 

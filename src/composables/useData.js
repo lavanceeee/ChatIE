@@ -9,12 +9,11 @@ import { callAPI } from "./callAPI";
 */
 export async function getUsersForm(selectedPattern, usersInputForm) {
   try {
-    //加载可视化
     document.body.style.cursor = "wait";
 
     storeData.loadParameter(usersInputForm, selectedPattern);
 
-    //大坑: 不能直接统一变量，还未赋值；
+    //不能直接统一变量，还未赋值
     loadPattern();
 
     let stage = "stage_1";
