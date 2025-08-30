@@ -66,15 +66,36 @@ jobs:
             chmod 644 /tmp/github_sync/*
             
       - name: copy files from server  
-        uses: appleboy/scp-action@v1.0.0
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
-          source: "/tmp/github_sync/app.py,/tmp/github_sync/requirements.txt"
-          target: "./"
-          strip_components: 2
+          script: |
+            # 输出文件内容到GitHub Actions日志
+            echo "--- app.py content ---"
+            cat /tmp/github_sync/app.py
+            echo "--- requirements.txt content ---"  
+            cat /tmp/github_sync/requirements.txt
+            echo "--- download complete ---"
+
+      - name: download and save files
+        run: |
+          # 创建临时SSH密钥文件
+          echo "${{ secrets.VPS_SSH_KEY }}" > ssh_key
+          chmod 600 ssh_key
+          
+          # 下载文件
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.VPS_PORT || 22 }} -i ssh_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} 'cat /tmp/github_sync/app.py' > app.py
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.VPS_PORT || 22 }} -i ssh_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} 'cat /tmp/github_sync/requirements.txt' > requirements.txt
+          
+          # 清理临时密钥文件
+          rm -f ssh_key
+          
+          # 验证文件
+          echo "Downloaded files:"
+          ls -la app.py requirements.txt
           
       - name: commit and push changes
         run: |
