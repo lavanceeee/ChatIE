@@ -52,7 +52,7 @@ jobs:
           token: ${{ secrets.PAT }}  
 
       - name: download code
-        uses: appleboy/scp-action@v1
+        uses: appleboy/scp-action@v0.20.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
@@ -61,6 +61,8 @@ jobs:
           direction: download 
           source: "/var/www/banked/chatie_banked/app.py,/var/www/banked/chatie_banked/requirements.txt"  # 服务器目标文件
           target: "./" 
+          overwrite: true
+          debug: true
 
       - name: update
         run: |
