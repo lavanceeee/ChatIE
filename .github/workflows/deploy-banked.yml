@@ -4,13 +4,24 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      action:
+        description: 'Choose action to perform'
+        required: true
+        default: 'sync-to-github'
+        type: choice
+        options:
+          - sync-to-github
+          - deploy-to-server
   schedule:
     - cron: '0 3 * * *'
 
 jobs:
   deploy-to-server:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'deploy-to-server')
     steps:
       - name: 检出GitHub仓库代码
         uses: actions/checkout@v4
@@ -42,7 +53,9 @@ jobs:
 
   sync-server-to-github:
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    if: |
+      github.event_name == 'schedule' ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.action == 'sync-to-github' || github.event.inputs.action == ''))
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
