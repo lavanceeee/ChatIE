@@ -159,14 +159,3 @@ onMounted(() => {
   initDataSets();
 });
 </script>
-
-<style scoped>
-#vis-container {
-  width: 35rem;
-  height: 350px;
-  border: 1px solid black;
-  margin: 20px auto;
-  padding: 0;
-  border-radius: 5px;
-}
-</style>

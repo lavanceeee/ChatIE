@@ -30,36 +30,3 @@ watch(
   }
 );
 </script>
-
-<style scoped>
-.result-container {
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 100%;
-  padding: 20px;
-}
-
-.table-container :deep(table) {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
-  font-size: 1rem;
-  text-align: left;
-}
-
-.table-container :deep(th),
-.table-container :deep(td) {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.table-container :deep(th) {
-  background-color: #f8fafc;
-  font-weight: 600;
-  color: #334155;
-}
-
-.table-container :deep(tr:hover) {
-  background-color: #f1f5f9;
-}
-</style>

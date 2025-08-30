@@ -52,6 +52,17 @@
       v-model="localInputForm.sentence"
     />
 
+    <details>
+      <summary>Rules</summary>
+      <div><strong>Both are JSON format</strong></div>
+
+      <div>
+        RE: {"rtl": ["xxx", "xxx"], "stl": ["xxx"], "otl": ["xxx", "xxx"]}
+      </div>
+      <div>NER: {"etl: {""Business:Declare-Bankruptcy": [ "Org", "Time", "Place" ]} }</div>
+      <div>EE: {"etl": ["PROD", "ORG", "DATE", "DATE"]}</div>
+    </details>
+
     <input
       type="text"
       placeholder="pattern (optional)"
@@ -126,59 +137,10 @@ const submmitInput = () => {
     alert(`${localPattern.selectedModel} sentence is required!`);
   }
 
-  emit('submit');
+  emit("submit");
 };
 
 const clearInput = () => {
-  emit('clear');
+  emit("clear");
 };
 </script>
-
-
-<style scoped>
-.selector {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  margin-top: 1rem;
-}
-
-.content-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  align-items: center;
-  margin-top: 2rem;
-}
-
-.content-container input {
-  width: 100%;
-  height: 3rem;
-  border-radius: 3px;
-  border: 1px solid black;
-  padding: 0 10px;
-}
-
-.btn-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.btn-container button {
-  width: 10rem;
-  height: 3rem;
-  background-color: rgb(0, 0, 0);
-  border: 1px solid black;
-  border-radius: 5px;
-  transition: all 0.3s ease;
-  color: white;
-}
-
-.btn-container button:hover {
-  background-color: rgb(55, 55, 55);
-  cursor: pointer;
-}
-</style>
