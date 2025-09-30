@@ -6,6 +6,8 @@
 
 [GPT4IE](https://github.com/lavanceeee/GPT4IE) is a clean version of ChatIE, which integrates two-stage framework into a unified system and using only one set of prompt. The result is equally execellent!
 
+**[My Detailed Blog](https://2jone.top/chatie/)** about what I have learned from this project
+
 ## What I have done
 
 - [x] Essential Code Refactoring & Optimization
